@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "risk-sensitive-riichi-mahjong"
+version = "0.1.0"
+description = "Reproducible MahJax simulation infrastructure for risk-sensitive RL research."
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "jax>=0.4.28,<0.7",
+    "mahjax==0.1.6",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
