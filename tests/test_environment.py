@@ -37,3 +37,20 @@ def test_reset_seed_is_reproducible() -> None:
 
     assert first.legal_actions == second.legal_actions
     assert first.current_player == second.current_player
+
+
+def test_final_ranking_breaks_ties_by_initial_not_current_winds():
+    from types import SimpleNamespace
+
+    environment = MahJaxEnvironment.__new__(MahJaxEnvironment)
+    round_state = SimpleNamespace(
+        score=(250, 250, 250, 300),
+        init_wind=(3, 0, 1, 2),
+        seat_wind=(0, 1, 2, 3),
+    )
+    environment._state = SimpleNamespace(terminated=True, truncated=False, round_state=round_state)
+
+    assert environment.final_ranking() == (3, 1, 2, 0)
+
+    environment._state.truncated = True
+    assert environment.final_ranking() is None
