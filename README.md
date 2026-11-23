@@ -16,6 +16,8 @@ python -m pip install -e '.[dev]'
 python -m mahjong.simulation --episodes 10 --seed 42
 ```
 
+For full-match risk validation, see the [hanchan evaluation protocol](docs/experiments.md#risk-sensitive-validation-protocol). The original single-hand simulation remains available independently.
+
 Run the test suite with:
 
 ```bash

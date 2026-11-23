@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, Mapping
+from typing import Any
 
 
 class IllegalActionError(ValueError):
@@ -115,11 +116,17 @@ class MahJaxEnvironment:
         return tuple(int(value) for value in self.state.round_state.score)
 
     def final_ranking(self) -> tuple[int, ...] | None:
-        """Return player IDs ordered by descending final MahJax score."""
-        scores = self.final_scores()
-        if scores is None:
+        """Order a completed episode by score, breaking ties by initial seat wind."""
+        if not bool(self.state.terminated) or bool(self.state.truncated):
             return None
-        return tuple(sorted(range(len(scores)), key=lambda player: (-scores[player], player)))
+        scores = self.state.round_state.score
+        initial_winds = self.state.round_state.init_wind
+        return tuple(
+            sorted(
+                range(len(scores)),
+                key=lambda player: (-int(scores[player]), int(initial_winds[player])),
+            )
+        )
 
     def _result(self) -> StepResult:
         observation = self._observe(self.state)
